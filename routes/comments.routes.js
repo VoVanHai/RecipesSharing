@@ -1,4 +1,4 @@
-// module.exports = (app) => {
+module.exports = (app) => {
 //     const notes = require('../controllers/recipes.controller.js');
 //
 //     // Create a new Note
@@ -15,4 +15,4 @@
 //
 //     // Delete a Note with noteId
 //     app.delete('/notes/:noteId', notes.delete);
-// }
+}

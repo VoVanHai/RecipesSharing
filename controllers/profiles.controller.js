@@ -82,14 +82,14 @@ exports.findOne = (req, res) => {
 // Update a note identified by the noteId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if(!req.body.content) {
+    if(!req.body) {
         return res.status(400).send({
             message: "Profile content can not be empty"
         });
     }
 
     // Find note and update it with the request body
-    Profile.findByIdAndUpdate(req.params._id, {
+    Profile.findOneAndUpdate({"userName":req.params.username}, {
         userName: req.body.userName,
         fullName: req.body.fullName,
         dob: req.body.dob,
@@ -104,18 +104,18 @@ exports.update = (req, res) => {
         .then(prf => {
             if(!prf) {
                 return res.status(404).send({
-                    message: "Profile not found with id " + req.params.noteId
+                    message: "Profile not found with id " + req.params.username
                 });
             }
             res.send(prf);
         }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Profile not found with id " + req.params.noteId
+                message: "Profile not found with id " + req.params.username
             });
         }
         return res.status(500).send({
-            message: "Error updating note with id " + req.params.noteId
+            message: "Error updating note with id " + req.params.username
         });
     });
 };
