@@ -1,4 +1,4 @@
-const Profile = require('../models/profile.models.js');
+const Profile = require('../models/profile.model.js');
 
 // Create and Save a new Profile
 exports.create = (req, res) => {

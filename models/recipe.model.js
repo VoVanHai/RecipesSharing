@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const ProfileSchema = require('../models/profile.models.js');
+const ProfileSchema = require('./profile.model.js');
 const CommentSchema = require('../models/comment.model');
 
 const IngredientSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
+    //_id: mongoose.Schema.Types.ObjectId,
     ingredientName: {
         type: String,
         required: true
@@ -17,7 +17,6 @@ const IngredientSchema = new mongoose.Schema({
         required: false
     },
 });
-
 const RecipeSchema = new mongoose.Schema({
     //_id: mongoose.Schema.Types.ObjectId,
     recipeName: {

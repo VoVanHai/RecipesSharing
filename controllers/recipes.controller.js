@@ -1,4 +1,4 @@
-// const Note = require('../models/models.js');
+ const Note = require('../models/recipe.model.js');
 //
 // // Create and Save a new Note
 // exports.create = (req, res) => {
