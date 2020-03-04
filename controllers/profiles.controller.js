@@ -8,6 +8,7 @@ exports.create = (req, res) => {
             message: "Profile content can not be empty"
         });
     }
+
     // Create a Profile
     const profile = new Profile({
         userName: req.body.userName,
