@@ -6,7 +6,8 @@ const IngredientSchema = new mongoose.Schema({
     //_id: mongoose.Schema.Types.ObjectId,
     ingredientName: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     original: {
         type: String,
@@ -18,9 +19,10 @@ const IngredientSchema = new mongoose.Schema({
     },
 });
 const RecipeSchema = new mongoose.Schema({
-    //_id: mongoose.Schema.Types.ObjectId,
+
     recipeName: {
         type: String,
+        unique:true,
         required: true
     },
     description: String,

@@ -1,14 +1,11 @@
 const mongoose = require('mongoose');
-const RecipeSchema = require('../models/recipe.model.js');
 const ProfileSchema = require('./profile.model.js');
+
 const CommentSchema = mongoose.Schema({
     //_id: mongoose.Schema.Types.ObjectId,
-    recipeId: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref: RecipeSchema
-    },
+
     userName: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: ProfileSchema
     },
     commentDate:{
