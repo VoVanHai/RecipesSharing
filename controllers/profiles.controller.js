@@ -24,7 +24,7 @@ exports.create = (req, res) => {
         notes: req.body.notes || ""
     });
 
-    // Save Note in the database
+    // Save Profile in the database
     profile.save()
         .then(data => {
             res.send(data);
@@ -34,7 +34,7 @@ exports.create = (req, res) => {
         });
     });
 };
-// Retrieve and return all notes from the database.
+// Retrieve and return all profiles from the database.
 exports.findActiveProfile = (req, res) => {
     Profile.find({"state":"active"})
         .then(prf => {

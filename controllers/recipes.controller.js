@@ -3,36 +3,46 @@
 // Create and Save a new Note
 exports.create = (req, res) => {
     // Validate request
-    if(!req.body.content) {
+    if(!req.body.recipeName) {
         return res.status(400).send({
-            message: "Note content can not be empty"
+            message: "Recipe content can not be empty"
         });
     }
 
     // Create a Note
     const recipe = new Recipe({
-        recipeId: req.body.recipeId || "Untitled Note",
+        recipeId: req.body.recipeId,
+        description: req.body.description,
+        ingredients: req.body.ingredients,
+        images: req.body.images || "",
+        comments: req.body.comments || "",
+        method: req.body.method,
+        cookingTime: req.body.cookingTime,
+        nutrition: req.body.nutrition,
+        hardLevel: req.body.hardLevel,
+        crateBy: req.body.crateBy,
+        state: req.body.state
     });
 
-    // Save Note in the database
+    // Save Recipe in the database
     recipe.save()
     .then(data => {
         res.send(data);
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Some error occurred while creating the Note."
+            message: err.message || "Some error occurred while creating the Recipe."
         });
     });
 };
 
-// Retrieve and return all notes from the database.
+// Retrieve and return all recipes from the database.
 exports.findAll = (req, res) => {
-    Recipe.find()
-    .then(notes => {
-        res.send(notes);
+    Recipe.find({"state":"active"})
+    .then(prf => {
+        res.send(prf);
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Some error occurred while retrieving notes."
+            message: err.message || "Some error occurred while retrieving Recipes."
         });
     });
 };
