@@ -1,116 +1,91 @@
 const Comment = require('../models/comment.model.js');
+const Recipe = require('../models/recipe.model.js');
 
 // Create and Save a new Note
 exports.create = (req, res) => {
     // Validate request
-    if(!req.body.content) {
+    if(!req.body.userName) {
         return res.status(400).send({
-            message: "Note content can not be empty"
+            message: "recipe content can not be empty"
         });
     }
-
-    // Create a Note
-    const comment = new Comment({
-       // title: req.body.title || "Untitled Note",
-       // content: req.body.content
+    const comment =new Comment({
+        userName: req.body.userName,
+        commentDate:Date.now(),
+        content: req.body.content,
+        rate:req.body.rate || "3",
+        state:"unapproved"
     });
+    //comment.save()
+    addComment2Recipe(req.params.recipeId,comment)
+    .then(docComment=>{
+        console.log("add comment to recipe");
+        
+        res.send(docComment);
+    })
+    .catch(err=>{
+        console.log("Error save comment: ",err.message);
+    });
+}
 
-    // Save Note in the database
-    comment.save()
-    .then(data => {
-        res.send(data);
+const addComment2Recipe = function(recipeId, comment){
+    return comment.save(comment)
+    .then(docComment=>{
+        return Recipe.findByIdAndUpdate(
+            recipeId,
+            {
+                $push:{comments: docComment._id}
+            },
+            { new: true, useFindAndModify: false }
+        ); 
+    });  
+}
+//
+// Retrieve and return all comments of one recipe.
+exports.findAll = (req, res) => {
+    var recipeId = req.params.recipeId;
+    Recipe.find({"_id":recipeId})
+    .populate("comments") //get whole recipe with full-comments
+    .select({"comments":1, "_id":0}) //projecct - receive only comment field
+    .then(notes => {
+        res.send(notes);
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Some error occurred while creating the Note."
+            message: err.message || "Some error occurred while retrieving comment."
         });
     });
 };
-//
-// // Retrieve and return all notes from the database.
-// exports.findAll = (req, res) => {
-//     Note.find()
-//     .then(notes => {
-//         res.send(notes);
-//     }).catch(err => {
-//         res.status(500).send({
-//             message: err.message || "Some error occurred while retrieving notes."
-//         });
-//     });
-// };
-//
-// // Find a single note with a noteId
-// exports.findOne = (req, res) => {
-//     Note.findById(req.params.noteId)
-//     .then(note => {
-//         if(!note) {
-//             return res.status(404).send({
-//                 message: "Note not found with id " + req.params.noteId
-//             });
-//         }
-//         res.send(note);
-//     }).catch(err => {
-//         if(err.kind === 'ObjectId') {
-//             return res.status(404).send({
-//                 message: "Note not found with id " + req.params.noteId
-//             });
-//         }
-//         return res.status(500).send({
-//             message: "Error retrieving note with id " + req.params.noteId
-//         });
-//     });
-// };
-//
-// // Update a note identified by the noteId in the request
-// exports.update = (req, res) => {
-//     // Validate Request
-//     if(!req.body.content) {
-//         return res.status(400).send({
-//             message: "Note content can not be empty"
-//         });
-//     }
-//
-//     // Find note and update it with the request body
-//     Note.findByIdAndUpdate(req.params.noteId, {
-//         title: req.body.title || "Untitled Note",
-//         content: req.body.content
-//     }, {new: true})
-//     .then(note => {
-//         if(!note) {
-//             return res.status(404).send({
-//                 message: "Note not found with id " + req.params.noteId
-//             });
-//         }
-//         res.send(note);
-//     }).catch(err => {
-//         if(err.kind === 'ObjectId') {
-//             return res.status(404).send({
-//                 message: "Note not found with id " + req.params.noteId
-//             });
-//         }
-//         return res.status(500).send({
-//             message: "Error updating note with id " + req.params.noteId
-//         });
-//     });
-// };
-//
-// // Delete a note with the specified noteId in the request
-// exports.delete = (req, res) => {
-//     Note.findByIdAndRemove(req.params.noteId)
-//     .then(note => {
-//         if(!note) {
-//             return res.status(404).send({
-//                 message: "Note not found with id " + req.params.noteId
-//             });
-//         }
-//         res.send({message: "Note deleted successfully!"});
-//     }).catch(err => {
-//         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
-//             return res.status(404).send({
-//                 message: "Note not found with id " + req.params.noteId
-//             });
-//         }
-//         return res.status(500).send({
-//             message: "Could not delete note with id " + req.params.noteId
-//         });
-//     });
-// };
+
+//processing comment, setit's state to 'approved'
+exports.approved = (req,res) => {
+    //var state = req.params.state;
+    Comment.findByIdAndUpdate(req.params.commentId,
+        {
+            state : "approved"
+        })
+    .then(docComment => {
+        res.send(docComment);
+    })
+    .catch(err =>{
+        res.status(500).send({
+            message: err.message || "Some error occurred while approving comment."
+        });
+    });
+}
+
+//processing comment, setit's state to 'approved'
+exports.delete = (req,res) => {
+    //var state = req.params.state;
+    Comment.findByIdAndUpdate(req.params.commentId,
+        {
+            state : "deleted"
+        })
+    .then(docComment => {
+        res.send(docComment);
+    })
+    .catch(err =>{
+        res.status(500).send({
+            message: err.message || "Some error occurred while delete comment."
+        });
+    });
+}

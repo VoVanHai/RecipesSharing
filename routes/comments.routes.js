@@ -2,17 +2,16 @@ module.exports = (app) => {
     const comment = require('../controllers/comments.controller.js');
 
     // Create a new Note
-    app.post('/comment', comment.create);
+    app.post('/comment/:recipeId', comment.create);
+    
 
-//     // Retrieve all Notes
-//     app.get('/notes', notes.findAll);
-//
-//     // Retrieve a single Note with noteId
-//     app.get('/notes/:noteId', notes.findOne);
-//
-//     // Update a Note with noteId
-//     app.put('/notes/:noteId', notes.update);
-//
-//     // Delete a Note with noteId
-//     app.delete('/notes/:noteId', notes.delete);
+    // Retrieve all Notes
+    app.get('/comment/:recipeId', comment.findAll);
+
+    //approve a comment
+    app.put("/comment/:commentId",comment.approved);
+
+    //delete a comment
+    app.delete("/comment/:commentId",comment.delete);
+
 }

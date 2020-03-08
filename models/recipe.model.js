@@ -2,22 +2,6 @@ const mongoose = require('mongoose');
 const ProfileSchema = require('./profile.model.js');
 const CommentSchema = require('../models/comment.model');
 
-const IngredientSchema = new mongoose.Schema({
-    //_id: mongoose.Schema.Types.ObjectId,
-    ingredientName: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    original: {
-        type: String,
-        required: false
-    },
-    description: {
-        type: String,
-        required: false
-    },
-});
 const RecipeSchema = new mongoose.Schema({
 
     recipeName: {
@@ -28,8 +12,18 @@ const RecipeSchema = new mongoose.Schema({
     description: String,
     ingredients: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: IngredientSchema
+            ingredientName: {
+                type: String,
+                required: true,
+            },
+            original: {
+                type: String,
+                required: false
+            },
+            description: {
+                type: String,
+                required: false
+            }
         }
     ],
     images: [],
@@ -51,7 +45,7 @@ const RecipeSchema = new mongoose.Schema({
         enum:['very-easy', 'easy', 'hard', 'very-hard'],
         default: 'easy'
     },
-    crateBy:{
+    createBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref: ProfileSchema
     },
